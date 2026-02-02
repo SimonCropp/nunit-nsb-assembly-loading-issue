@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
+    <NoWarn>xUnit1051</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,5 +15,12 @@
     <PackageReference Include="xunit.v3" Version="1.1.0" />
     <Using Include="Xunit" />
   </ItemGroup>
+
+  <!-- Copy HandlerAssembly.dll to output without referencing it (to avoid loading into Default ALC) -->
+  <Target Name="CopyHandlerAssembly" AfterTargets="Build">
+    <Copy SourceFiles="..\HandlerAssembly\bin\Debug\net10.0\HandlerAssembly.dll"
+          DestinationFolder="$(OutputPath)"
+          SkipUnchangedFiles="true" />
+  </Target>
 
 </Project>

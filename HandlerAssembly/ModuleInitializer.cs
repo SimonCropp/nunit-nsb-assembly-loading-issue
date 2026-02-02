@@ -1,10 +1,11 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.Loader;
 
+namespace HandlerAssembly;
+
 public static class ModuleInitializer
 {
-    // Track which ALCs have initialized this module (stored globally in AppDomain)
-    const string InitializedContextsKey = "ModuleInitializer_InitializedContexts";
+    const string InitializedContextsKey = "HandlerAssembly_ModuleInitializer_InitializedContexts";
     static readonly object lockObj = new();
 
     [ModuleInitializer]
@@ -13,7 +14,7 @@ public static class ModuleInitializer
         var loadContext = AssemblyLoadContext.GetLoadContext(typeof(ModuleInitializer).Assembly)!;
         var contextName = loadContext.Name ?? "unnamed";
 
-        Console.WriteLine($"=== ModuleInitializer called in ALC: {contextName} ===");
+        Console.WriteLine($"=== HandlerAssembly ModuleInitializer called in ALC: {contextName} ===");
 
         lock (lockObj)
         {
@@ -26,14 +27,13 @@ public static class ModuleInitializer
 
             if (initializedContexts.Contains(contextName))
             {
-                // Same ALC loaded twice - this is the bug we're looking for
                 throw new Exception(
-                    $"ModuleInitializer called twice in SAME AssemblyLoadContext: {contextName}\n" +
+                    $"HandlerAssembly ModuleInitializer called twice in SAME AssemblyLoadContext: {contextName}\n" +
                     $"Stack trace:\n{Environment.StackTrace}");
             }
 
             initializedContexts.Add(contextName);
-            Console.WriteLine($"Total ALCs that have loaded this assembly: {initializedContexts.Count} ({string.Join(", ", initializedContexts)})");
+            Console.WriteLine($"Total ALCs that have loaded HandlerAssembly: {initializedContexts.Count} ({string.Join(", ", initializedContexts)})");
         }
     }
 }
