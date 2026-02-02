@@ -11,10 +11,13 @@ public class EndToEndTests
 
         customAlc.Resolving += (context, name) =>
         {
-            if (name.Name!.StartsWith("System") || name.Name.StartsWith("Microsoft"))
-                return null;
+            // Try to load from basePath first
             var path = Path.Combine(basePath, $"{name.Name}.dll");
-            return File.Exists(path) ? context.LoadFromAssemblyPath(path) : null;
+            if (File.Exists(path))
+                return context.LoadFromAssemblyPath(path);
+            // Fall back to loading from Default ALC
+            try { return AssemblyLoadContext.Default.LoadFromAssemblyName(name); }
+            catch { return null; }
         };
 
         var assembly = customAlc.LoadFromAssemblyPath(Path.Combine(basePath, "HandlerAssembly.dll"));

@@ -1,3 +1,6 @@
 <Solution>
-  <Project Path="MinimalRepro.Tests/MinimalRepro.Tests.csproj" />
+  <Project Path="HandlerAssembly/HandlerAssembly.csproj" />
+  <Project Path="MinimalRepro.Tests/MinimalRepro.Tests.csproj">
+    <BuildDependency Project="HandlerAssembly/HandlerAssembly.csproj" />
+  </Project>
 </Solution>
