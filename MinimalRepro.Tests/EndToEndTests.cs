@@ -2,7 +2,7 @@ public class EndToEndTests
 {
     AutoResetEvent resetEvent = new(false);
 
-    [Test]
+    [Fact]
     public async Task Simple()
     {
         var configuration = new EndpointConfiguration("MinimalRepro");
