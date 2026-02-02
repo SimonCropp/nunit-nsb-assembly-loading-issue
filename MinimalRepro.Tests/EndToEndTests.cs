@@ -1,8 +1,3 @@
-using Microsoft.Extensions.DependencyInjection;
-using NServiceBus;
-
-namespace MinimalRepro.Tests;
-
 public class EndToEndTests
 {
     AutoResetEvent resetEvent = new(false);
@@ -14,7 +9,7 @@ public class EndToEndTests
         configuration.UseTransport<LearningTransport>();
         configuration.UsePersistence<LearningPersistence>();
         configuration.UseSerialization<SystemJsonSerializer>();
-        configuration.RegisterComponents(services => services.AddSingleton(resetEvent));
+        configuration.RegisterComponents(_ => _.AddSingleton(resetEvent));
 
         var endpoint = await Endpoint.Start(configuration);
         await endpoint.SendLocal(new TestMessage());
